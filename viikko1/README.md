@@ -1,1 +1,0 @@
-en jaksa käydä git asioita uudelleen läpi kun kävin ne juuri lapio-kurssilla
