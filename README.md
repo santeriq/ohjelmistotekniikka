@@ -3,3 +3,6 @@ https://github.com/santeriq/ohjelmistotekniikka/blob/master/dokumentaatio/vaatim
 
 työaika kirjanpito:
 https://github.com/santeriq/ohjelmistotekniikka/blob/master/dokumentaatio/tyoaikakirjanpito.txt
+
+change log:
+https://github.com/santeriq/ohjelmistotekniikka/blob/master/dokumentaatio/changelog.md
