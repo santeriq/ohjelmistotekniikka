@@ -3,13 +3,13 @@
 * GUI tehty tkinter avulla
 * luotu neljä eri käyttäjäroolia: none (guest), student, teacher, admin
 
-* role none:
- - mahdollista lähettää opiskelijarooli pyyntö
+ * role none:
+   -   mahdollista lähettää opiskelijarooli pyyntö
  
- * role admin:
-  - mahdollista hyväksyä opiskelijarooli pyyntö
-  - mahdollista jakaa rooleja käyttäjänimen avulla
-  - mahdollista luoda uusi kurssi
-  - mahdollista sulkea kurssi
-  - mahdollista avata kurssi
-  - mahdollista selata kursseja läpi
+  * role admin:
+    -   mahdollista hyväksyä opiskelijarooli pyyntö
+    -   mahdollista jakaa rooleja käyttäjänimen avulla
+    -   mahdollista luoda uusi kurssi
+    -   mahdollista sulkea kurssi
+    -   mahdollista avata kurssi
+    -   mahdollista selata kursseja läpi
