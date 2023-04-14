@@ -1,10 +1,11 @@
+from werkzeug.security import check_password_hash
 import database
-from werkzeug.security import check_password_hash, generate_password_hash
+
 
 
 def login(username: str, password: str):
     real_password = database.get_password(username)
-    if real_password != None:
+    if real_password is not None:
         if check_password_hash(database.get_password(username), password):
             return True
         return False
@@ -13,10 +14,9 @@ def login(username: str, password: str):
 def new_password(password1: str, password2: str):
     if password1 == password2 and len(password1) >= 8:
         return True
-    elif password1 == password2 and len(password1) < 8:
-        return None
-    elif password1 != password2:
+    if password1 != password2 and len(password1) >= 8:
         return False
+    return None
 
 def new_username(username: str):
     check = database.search_username(username)
@@ -35,8 +35,3 @@ def check_if_new_studentrole_request(username: str):
     if len(check) == 0:
         return True
     return False
-
-
-
-
-

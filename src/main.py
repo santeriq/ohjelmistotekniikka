@@ -3,7 +3,8 @@ import database
 import functions
 
 
-# you only have to run this 
+
+# you only have to run this
 # gui.py has function that will start the program
 # when running first time you should close the program
 # after closing the program if-statement will run and add testing accounts
@@ -11,7 +12,7 @@ import functions
 # to erase the database use function database.delete_database()
 
 
-if True:
+if __name__ == "__main__":
     print(database.create_admin("admin1", "salasana1"))
     print(database.create_teacher("teacher1", "salasana1"))
     print(database.create_teacher("teacher2", "salasana1"))
@@ -29,8 +30,8 @@ if True:
     print(database.delete_teacher("teacher1"))
     print(functions.login("teacher1", "salasana1")) # None / vääräkäyttäjätunnus
     print(functions.new_username("user1")) # False / username taken
-    print(database.create_course("ohpe2021", "Ohjelmoinnin perusteet 2021", 5)) 
-    print(database.create_course("ohpe2022", "Ohjelmoinnin perusteet 2022", 5)) 
+    print(database.create_course("ohpe2021", "Ohjelmoinnin perusteet 2021", 5))
+    print(database.create_course("ohpe2022", "Ohjelmoinnin perusteet 2022", 5))
     print(database.create_course("ohja2021", "Ohjelmoinnin jatkokurssi 2021", 5))
     print(database.create_course("lapio2022", "Tietokone työvälineenä 2022", 1))
     print(database.create_course("tito2022", "Tietokoneen toiminta 2022", 5))
