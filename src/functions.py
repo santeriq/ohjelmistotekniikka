@@ -2,19 +2,6 @@ import database
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
-
-def new_admin(name: str, username: str, password: str):
-    database.create_admin(name, username, password)
-    return f'Uusi admin luotu nimellä "{username}"'
-
-def new_teacher(name: str, username: str, password: str):
-    database.create_teacher(name, username, password)
-    return f'Uusi opettaja luotu nimellä "{username}"'
-
-def new_student(name: str, username: str, password: str):
-    database.create_student(name, username, password)
-    return f'Uusi opiskelija luotu nimellä "{username}"'
-
 def login(username: str, password: str):
     real_password = database.get_password(username)
     if real_password != None:
@@ -23,19 +10,33 @@ def login(username: str, password: str):
         return False
     return None
 
+def new_password(password1: str, password2: str):
+    if password1 == password2 and len(password1) >= 8:
+        return True
+    elif password1 == password2 and len(password1) < 8:
+        return None
+    elif password1 != password2:
+        return False
+
+def new_username(username: str):
+    check = database.search_username(username)
+    if len(check) == 0:
+        return True
+    return False
+
+def check_if_course_tag_free(tag: str):
+    check = database.search_course_tag(tag)
+    if len(check) == 0:
+        return True
+    return False
+
+def check_if_new_studentrole_request(username: str):
+    check = database.get_studentrole_request_of_user(username)
+    if len(check) == 0:
+        return True
+    return False
 
 
 
 
-if __name__ == "__main__":
-    print(new_admin("Kaaleppi", "admin1", "salasana123"))
-    print(new_teacher("Matti", "Matti85", "mattimatti"))
-    print(new_teacher("Teppo", "Teppo33", "teppo123"))
-    print(new_student("Santeri", "santeri", "santeri321"))
-    print(login("admin1", "salasana123")) # True
-    print(login("atti85", "mattimatti")) # None / väärä käyttäjätunnus
-    print(login("teppo33", "teppo123")) # True
-    print(login("SANTERI", "santeri")) # False / väärä salasana
-    database.delete_teacher("Teppo33")
-    print(login("teppo33", "teppo123")) # None / vääräkäyttäjätunnus
-    print(new_teacher("teppo", "Teppo33", "teppo123"))
+
