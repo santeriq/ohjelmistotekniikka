@@ -3,16 +3,17 @@ import database
 import functions
 
 
-
 # you only have to run this
-# gui.py has function that will start the program
 # when running first time you should close the program
 # after closing the program if-statement will run and add testing accounts
 # you should change True value to False not to make duplicates in database
 # to erase the database use function database.delete_database()
 
+gui.start()
+
 
 if __name__ == "__main__":
+    database.delete_database()
     print(database.create_admin("admin1", "salasana1"))
     print(database.create_teacher("teacher1", "salasana1"))
     print(database.create_teacher("teacher2", "salasana1"))
@@ -23,13 +24,13 @@ if __name__ == "__main__":
     print(database.create_user("user4", "salasana1"))
     print(database.create_user("abc", "salasana1"))
     print(database.create_user("zzz", "salasana1"))
-    print(functions.login("user1", "salasana1")) # True
+    print(functions.login("user1", "salasana1"))  # True
     print(functions.login("user100", "salasana1")) # None / väärä käyttäjätunnus
-    print(functions.login("uSER1", "salasana1")) # True
-    print(functions.login("user1", "salasana123")) # False / väärä salasana
-    print(database.delete_teacher("teacher1"))
-    print(functions.login("teacher1", "salasana1")) # None / vääräkäyttäjätunnus
-    print(functions.new_username("user1")) # False / username taken
+    print(functions.login("uSER1", "salasana1"))  # True
+    print(functions.login("user1", "salasana123"))  # False / väärä salasana
+    print(database.delete_teacher("teacher2"))
+    print(functions.login("teacher2", "salasana1")) # None / vääräkäyttäjätunnus
+    print(functions.new_username("user1"))  # False / username taken
     print(database.create_course("ohpe2021", "Ohjelmoinnin perusteet 2021", 5))
     print(database.create_course("ohpe2022", "Ohjelmoinnin perusteet 2022", 5))
     print(database.create_course("ohja2021", "Ohjelmoinnin jatkokurssi 2021", 5))
