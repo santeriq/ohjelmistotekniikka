@@ -12,13 +12,13 @@ def test_login():
     assert functions.login("user1", "salasana1") == True
 
 def test_new_username():
-    assert functions.login("user1") == False
-    assert functions.login("moi") == True
+    assert functions.new_username("user1") == False
+    assert functions.new_username("moi") == True
 
 def test_new_coursetag():
     assert functions.new_coursetag("ohpe2021") == False
     assert functions.new_coursetag("ohpe2020") == True
 
 def test_new_studentrole_request():
-    assert functions.new_studentrole_request("moi") == False
-    assert functions.new_studentrole_request("user1") == True
+    assert functions.new_studentrole_request("moi") == True
+    assert functions.new_studentrole_request("user1") == False
