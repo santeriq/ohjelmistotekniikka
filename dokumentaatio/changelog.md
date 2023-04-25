@@ -1,12 +1,13 @@
 14.4.2023 perjantai:
 
-* GUI tehty tkinter avulla
-* luotu neljä eri käyttäjäroolia: none (guest), student, teacher, admin
+GUI tehty tkinter avulla
 
-* role none:
+luotu neljä eri käyttäjäroolia: none (guest), student, teacher, admin
+
+role none:
  - mahdollista lähettää opiskelijarooli pyyntö
  
-* role admin:
+role admin:
  - mahdollista hyväksyä opiskelijarooli pyyntö
  - mahdollista jakaa rooleja käyttäjänimen avulla
  - mahdollista luoda uusi kurssi
@@ -17,10 +18,10 @@
 
 25.4.2023 tiistai:
 
-* Database muutos
+Database muutos
  - roolit vaihdettiin numeroiksi 0-3
 
-* role admin:
+role admin:
  - lisätty "view users"
  - lisätty "view students"
  - lisätty "view teachers"
