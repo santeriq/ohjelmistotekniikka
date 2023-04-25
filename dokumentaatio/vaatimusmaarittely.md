@@ -12,8 +12,7 @@ Käyttäjätyypit:
   -  pystyy hallitsemaan käyttäjien rooleja (tehty)
   -  pystyy selaamaan "student" rooli pyyntöjä (tehty)
   -  pystyy hyväksymään "student" rooli pyynnön (tehty)
-  -  pystyy selaamaan käyttäjiä
-  -  pystyy poistamaan käyttäjiä
+  -  pystyy selaamaan käyttäjiä (tehty)
 
 * teacher
   -  pystyy selaamaan ja hyväksymään "student" rooli pyyntöjä
@@ -33,7 +32,8 @@ Käyttäjätyypit:
 
 
 Jatkokehitysideaoita
-
+ - sorttauksesesta kattavampi
  - mahdollisesti jonkinlainen kurssien, suoritusten tai opettajien kategorisointi
+ - admin pystyy poistamaan käyttäjiä
 
 
