@@ -15,6 +15,7 @@ role admin:
  - mahdollista avata kurssi
  - mahdollista selata kursseja läpi
 
+---------------------
 
 25.4.2023 tiistai:
 
