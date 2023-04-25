@@ -9,28 +9,28 @@ database.isolation_level = None
 
 try:
     database.execute("""
-                CREATE TABLE Users (
-                id INTEGER PRIMARY KEY,
-                username TEXT,
-                password TEXT,
-                role INTEGER,
-                visible BOOLEAN
+                        CREATE TABLE Users (
+                        id INTEGER PRIMARY KEY,
+                        username TEXT,
+                        password TEXT,
+                        role INTEGER,
+                        visible BOOLEAN
                 )""")
     database.execute("""
-                CREATE TABLE Courses (
-                id INTEGER PRIMARY KEY, 
-                tag TEXT, 
-                name TEXT, 
-                credits INTEGER, 
-                open BOOLEAN, 
-                visible BOOLEAN
+                        CREATE TABLE Courses (
+                        id INTEGER PRIMARY KEY, 
+                        tag TEXT, 
+                        name TEXT, 
+                        credits INTEGER, 
+                        open BOOLEAN, 
+                        visible BOOLEAN
                 )""")
     database.execute("""
-                CREATE TABLE StudentRoleRequests (
-                id INTEGER PRIMARY KEY, 
-                username TEXT, 
-                message TEXT, 
-                datetime DATETIME
+                        CREATE TABLE StudentRoleRequests (
+                        id INTEGER PRIMARY KEY, 
+                        username TEXT, 
+                        message TEXT, 
+                        datetime DATETIME
                 )""")
 except sqlite3.OperationalError:
     pass
@@ -53,12 +53,12 @@ def create_user(username: str, password: str):
     function_database = sqlite3.connect("school.db")
     function_database.isolation_level = None
     function_database.execute("""
-                INSERT INTO Users
-                (username, password, role, visible)
-                VALUES
-                (?, ?, ?, ?)
-                """,
-                              [username, password_hash, 3, 1])
+                                INSERT INTO Users
+                                (username, password, role, visible)
+                                VALUES
+                                (?, ?, ?, ?)
+                            """,
+                                [username, password_hash, 3, 1])
     function_database.commit()
     function_database.close()
     return f"created new user: {username}"
@@ -69,12 +69,12 @@ def create_admin(username: str, password: str):
     function_database = sqlite3.connect("school.db")
     function_database.isolation_level = None
     function_database.execute("""
-                INSERT INTO Users
-                (username, password, role, visible)
-                VALUES
-                (?, ?, ?, ?)
-                """,
-                              [username, password_hash, 0, 1])
+                                INSERT INTO Users
+                                (username, password, role, visible)
+                                VALUES
+                                (?, ?, ?, ?)
+                            """,
+                                [username, password_hash, 0, 1])
     function_database.commit()
     function_database.close()
     return f"created new admin: {username}"
@@ -85,12 +85,12 @@ def create_teacher(username: str, password: str):
     function_database = sqlite3.connect("school.db")
     function_database.isolation_level = None
     function_database.execute("""
-                INSERT INTO Users
-                (username, password, role, visible)
-                VALUES
-                (?, ?, ?, ?)
-                """,
-                              [username, password_hash, 1, 1])
+                                INSERT INTO Users
+                                (username, password, role, visible)
+                                VALUES
+                                (?, ?, ?, ?)
+                            """,
+                                [username, password_hash, 1, 1])
     function_database.commit()
     function_database.close()
     return f"created new teacher: {username}"

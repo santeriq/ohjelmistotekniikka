@@ -10,14 +10,12 @@ def login(username: str, password: str):
         return False
     return None
 
-
 def new_password(password1: str, password2: str):
     if password1 == password2 and len(password1) >= 8:
         return True
     if password1 != password2 and len(password1) >= 8:
         return False
     return None
-
 
 def new_username(username: str):
     check = database.search_username(username)
