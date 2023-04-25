@@ -13,7 +13,7 @@ try:
                 id INTEGER PRIMARY KEY,
                 username TEXT,
                 password TEXT,
-                role TEXT,
+                role INTEGER,
                 visible BOOLEAN
                 )""")
     database.execute("""
@@ -58,7 +58,7 @@ def create_user(username: str, password: str):
                 VALUES
                 (?, ?, ?, ?)
                 """,
-                              [username, password_hash, "none", 1])
+                              [username, password_hash, 3, 1])
     function_database.commit()
     function_database.close()
     return f"created new user: {username}"
@@ -74,7 +74,7 @@ def create_admin(username: str, password: str):
                 VALUES
                 (?, ?, ?, ?)
                 """,
-                              [username, password_hash, "admin", 1])
+                              [username, password_hash, 0, 1])
     function_database.commit()
     function_database.close()
     return f"created new admin: {username}"
@@ -90,7 +90,7 @@ def create_teacher(username: str, password: str):
                 VALUES
                 (?, ?, ?, ?)
                 """,
-                              [username, password_hash, "teacher", 1])
+                              [username, password_hash, 1, 1])
     function_database.commit()
     function_database.close()
     return f"created new teacher: {username}"
@@ -106,7 +106,7 @@ def create_student(username: str, password: str):
                 VALUES
                 (?, ?, ?, ?)
                 """,
-                              [username, password_hash, "student", 1])
+                              [username, password_hash, 2, 1])
     function_database.commit()
     function_database.close()
     return f"created new student: {username}"
@@ -206,8 +206,7 @@ def get_user_role(username):
 def set_user_role(username, role):
     function_database = sqlite3.connect("school.db")
     function_database.isolation_level = None
-    function_database.execute(
-        "UPDATE users SET role=? WHERE username=?", [role, username])
+    function_database.execute("UPDATE users SET role=? WHERE username=?", [role, username])
     function_database.commit()
     function_database.close()
     return f'set "{username}" as {role}'
@@ -361,6 +360,90 @@ def get_studentrole_request_of_user(username):
     function_database.close()
     return request
 
+def get_all_users_list():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE visible=1
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_users_list_sorted_by_name():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE visible=1
+                                        ORDER BY username
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_users_list_sorted_by_role():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE visible=1
+                                        ORDER BY role
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_students_list():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE role=2
+                                        AND visible=1
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_students_list_sorted_by_name():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE role=2
+                                        AND visible=1
+                                        ORDER BY username
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_teachers_list():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE role=1
+                                        AND visible=1
+                                    """).fetchall()
+    function_database.close()
+    return data
+
+def get_all_teachers_list_sorted_by_name():
+    function_database = sqlite3.connect("school.db")
+    function_database.isolation_level = None
+    data = function_database.execute("""
+                                        SELECT *
+                                        FROM Users
+                                        WHERE role=1
+                                        AND visible=1
+                                        ORDER BY username
+                                    """).fetchall()
+    function_database.close()
+    return data
 
 def accept_studentrole_request(username):
     function_database = sqlite3.connect("school.db")
@@ -369,7 +452,7 @@ def accept_studentrole_request(username):
         "DELETE FROM StudentRoleRequests WHERE username=?", [username])
     function_database.commit()
     function_database.close()
-    set_user_role(username, "student")
+    set_user_role(username, 2)
     return f"Accepted student role request from {username}"
 
 

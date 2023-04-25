@@ -36,5 +36,3 @@ def new_studentrole_request(username: str):
     if len(check) == 0:
         return True
     return False
-
-

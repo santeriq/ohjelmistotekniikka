@@ -1,4 +1,4 @@
-from tkinter import Tk, Frame, Label, Button, Entry, Canvas, Toplevel, Radiobutton, StringVar
+from tkinter import Tk, Frame, Label, Button, Entry, Canvas, Toplevel, Radiobutton, StringVar, IntVar
 from tkinter import N, Y, RIGHT, VERTICAL, BOTH, LEFT
 from tkinter import ttk
 from datetime import datetime
@@ -151,13 +151,13 @@ def create_account_check(username_input, password1_input, password2_input):
 def logged_in(username):
     clear_frame()
     user_role = database.get_user_role(username)
-    if user_role == "student":
+    if user_role == 2:
         logged_in_as_student(username)
-    elif user_role == "teacher":
+    elif user_role == 1:
         logged_in_as_teacher(username)
-    elif user_role == "admin":
+    elif user_role == 0:
         logged_in_as_admin(username)
-    elif user_role == "none":
+    elif user_role == 3:
         logged_in_as_none(username)
 
 
@@ -191,26 +191,16 @@ def logged_in_as_teacher(username):
 def logged_in_as_admin(username):
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
-    Label(frame, text=f"{username} (admin)",
-          font=(FONT, 9, "bold")).place(x=238, y=0)
-    Button(frame, text="Create new course", command=create_course,
-           width=14, bd=3, pady=3).place(x=100, y=100)
-    Button(frame, text="Open course", command=open_course,
-           width=14, pady=3).place(x=100, y=131)
-    Button(frame, text="Close course", command=close_course,
-           width=14).place(x=100, y=160)
-    Button(frame, text="View courses", command=create_view_courses_popup,
-           width=14, bd=3, pady=3).place(x=100, y=250)
-    Button(frame, text="Control roles", command=control_roles_as_admin,
-           width=14, bd=3, pady=3).place(x=250, y=100)
-    Button(frame, text="View all users", width=14,
-           bd=3, pady=3).place(x=250, y=250)
-    Button(frame, text="View students", width=14,
-           bd=3, pady=3).place(x=250, y=280)
-    Button(frame, text="View teachers", width=14,
-           bd=3, pady=3).place(x=250, y=310)
-    Button(frame, text="View student role requests",
-           command=create_view_student_requests_popup, width=25, bd=3, pady=3).place(x=100, y=350)
+    Label(frame, text=f"{username} (admin)", font=(FONT, 9, "bold")).place(x=238, y=0)
+    Button(frame, text="Create new course", command=create_course, width=14, bd=3, pady=3).place(x=100, y=100)
+    Button(frame, text="Open course", command=open_course, width=14, pady=3).place(x=100, y=131)
+    Button(frame, text="Close course", command=close_course, width=14).place(x=100, y=160)
+    Button(frame, text="View courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=250)
+    Button(frame, text="Control roles", command=control_roles_as_admin, width=14, bd=3, pady=3).place(x=250, y=100)
+    Button(frame, text="View all users", command=create_view_all_users_popup, width=14, bd=3, pady=3).place(x=250, y=250)
+    Button(frame, text="View students", command=create_view_all_students_popup, width=14, bd=3, pady=3).place(x=250, y=280)
+    Button(frame, text="View teachers", command=create_view_all_teachers_popup,width=14, bd=3, pady=3).place(x=250, y=310)
+    Button(frame, text="View student role requests", command=create_view_student_requests_popup, width=25, bd=3, pady=3).place(x=100, y=350)
 
 
 # role "none" tools
@@ -243,6 +233,148 @@ def request_student_role(username, message):
 
 # admin tools
 
+def create_view_all_users_popup():
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("430x400")
+    popup.title("View all users")
+    view_all_users()
+
+def view_all_users():
+    global users_list
+    users_list = database.get_all_users_list()
+    update_view_all_users()
+
+def view_all_users_by_name():
+    global users_list
+    users_list = database.get_all_users_list_sorted_by_name()
+    update_view_all_users()
+
+def view_all_users_by_role():
+    global users_list
+    users_list = database.get_all_users_list_sorted_by_role()
+    update_view_all_users()
+
+def update_view_all_users():
+    clear_popup()
+    add_scrollbar_to_right()
+    Label(second_frame, text="id").grid(row=0, column=1)
+    Label(second_frame, text="username").grid(row=0, column=2)
+    Label(second_frame, text="role").grid(row=0, column=3)
+    Label(second_frame, text="Order by").grid(row=1, column=0)
+    Button(second_frame, text="Default", command=view_all_users, width=15).grid(row=1, column=1)
+    Button(second_frame, text="x", command=view_all_users_by_name, width=15).grid(row=1, column=2)
+    Button(second_frame, text="x",command=view_all_users_by_role , width=15).grid(row=1, column=3)
+    row = 2
+    column = 1
+    for user in users_list:
+        id = user[0]
+        username = user[1]
+        role = user[3]
+        if role == 0:
+            role = "admin"
+        elif role == 1:
+            role = "teacher"
+        elif role == 2:
+            role = "student"
+        elif role == 3:
+            role = "none"
+        Label(second_frame, text=f"{id}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{role}").grid(row=row, column=column+2, sticky=N)
+        row = row + 1
+
+def create_view_all_students_popup():
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("430x400")
+    popup.title("View all students")
+    view_all_students()
+
+def view_all_students():
+    global students_list
+    students_list = database.get_all_students_list()
+    update_view_all_students()
+
+def view_all_students_by_name():
+    global students_list
+    students_list = database.get_all_students_list_sorted_by_name()
+    update_view_all_students()
+
+def update_view_all_students():
+    clear_popup()
+    add_scrollbar_to_right()
+    Label(second_frame, text="id").grid(row=0, column=1)
+    Label(second_frame, text="username").grid(row=0, column=2)
+    Label(second_frame, text="role").grid(row=0, column=3)
+    Label(second_frame, text="Order by").grid(row=1, column=0)
+    Button(second_frame, text="Default", command=view_all_students, width=15).grid(row=1, column=1)
+    Button(second_frame, text="x", command=view_all_students_by_name, width=15).grid(row=1, column=2)
+    Button(second_frame, text="x",command=view_all_students , width=15).grid(row=1, column=3)
+    row = 2
+    column = 1
+    for student in students_list:
+        id = student[0]
+        username = student[1]
+        role = student[3]
+        if role == 0:
+            role = "admin"
+        elif role == 1:
+            role = "teacher"
+        elif role == 2:
+            role = "student"
+        elif role == 3:
+            role = "none"
+        Label(second_frame, text=f"{id}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{role}").grid(row=row, column=column+2, sticky=N)
+        row = row + 1
+
+def create_view_all_teachers_popup():
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("430x400")
+    popup.title("View all teachers")
+    view_all_teachers()
+
+def view_all_teachers():
+    global teachers_list
+    teachers_list = database.get_all_teachers_list()
+    update_view_all_teachers()
+
+def view_all_teachers_by_name():
+    global teachers_list
+    teachers_list = database.get_all_teachers_list_sorted_by_name()
+    update_view_all_teachers()
+
+def update_view_all_teachers():
+    clear_popup()
+    add_scrollbar_to_right()
+    Label(second_frame, text="id").grid(row=0, column=1)
+    Label(second_frame, text="username").grid(row=0, column=2)
+    Label(second_frame, text="role").grid(row=0, column=3)
+    Label(second_frame, text="Order by").grid(row=1, column=0)
+    Button(second_frame, text="Default", command=view_all_teachers, width=15).grid(row=1, column=1)
+    Button(second_frame, text="x", command=view_all_teachers_by_name, width=15).grid(row=1, column=2)
+    Button(second_frame, text="x",command=view_all_teachers , width=15).grid(row=1, column=3)
+    row = 2
+    column = 1
+    for teacher in teachers_list:
+        id = teacher[0]
+        username = teacher[1]
+        role = teacher[3]
+        if role == 0:
+            role = "admin"
+        elif role == 1:
+            role = "teacher"
+        elif role == 2:
+            role = "student"
+        elif role == 3:
+            role = "none"
+        Label(second_frame, text=f"{id}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{role}").grid(row=row, column=column+2, sticky=N)
+        row = row + 1
 
 def create_view_student_requests_popup():
     global popup
@@ -304,13 +436,10 @@ def update_view_student_requests_popup():
     Label(second_frame, text="Date-time").grid(row=0, column=1)
     Label(second_frame, text="Username").grid(row=0, column=2)
     Label(second_frame, text="Message", width=50).grid(row=0, column=3)
-    Label(second_frame, text="Approve request").grid(
-        row=0, column=4, columnspan=2, sticky=N)
+    Label(second_frame, text="Approve request").grid(row=0, column=4, columnspan=2, sticky=N)
     Label(second_frame, text="Order by").grid(row=1, column=0)
-    Button(second_frame, text="Oldest",
-           command=view_student_requests_default, width=25).grid(row=1, column=1)
-    Button(second_frame, text="x", command=view_student_requests_sorted,
-           width=15).grid(row=1, column=2)
+    Button(second_frame, text="Oldest",command=view_student_requests_default, width=25).grid(row=1, column=1)
+    Button(second_frame, text="x", command=view_student_requests_sorted, width=15).grid(row=1, column=2)
     row = 2
     column = 1
     username_dict = {}
@@ -322,17 +451,12 @@ def update_view_student_requests_popup():
         username = request[1]
         message = request[2]
         time = request[3]
-        Label(second_frame, text=f"{time}").grid(
-            row=row, column=column, sticky=N)
-        Label(second_frame, text=f"{username}").grid(
-            row=row, column=column+1, sticky=N)
-        Label(second_frame, text=f"{message}").grid(
-            row=row, column=column+2, sticky=N)
-        accept_button = Button(second_frame, text="Accept", command=lambda row2=row: accept_student_request_from_default(
-            username_dict[row2]), width=10, bd=3)
+        Label(second_frame, text=f"{time}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{message}").grid(row=row, column=column+2, sticky=N)
+        accept_button = Button(second_frame, text="Accept", command=lambda row2=row: accept_student_request_from_default(username_dict[row2]), width=10, bd=3)
         accept_button.grid(row=row, column=column+3, sticky=N, padx=(0, 5))
-        reject_button = Button(second_frame, text="Reject", command=lambda row2=row: reject_student_request_from_default(
-            username_dict[row2]), width=10)
+        reject_button = Button(second_frame, text="Reject", command=lambda row2=row: reject_student_request_from_default(username_dict[row2]), width=10)
         reject_button.grid(row=row, column=column+4, sticky=N, padx=(5, 0))
         row = row + 1
 
@@ -343,13 +467,10 @@ def update_view_student_requests_popup_sorted():
     Label(second_frame, text="Date-time").grid(row=0, column=1)
     Label(second_frame, text="Username").grid(row=0, column=2)
     Label(second_frame, text="Message", width=50).grid(row=0, column=3)
-    Label(second_frame, text="Approve request").grid(
-        row=0, column=4, columnspan=2, sticky=N)
+    Label(second_frame, text="Approve request").grid(row=0, column=4, columnspan=2, sticky=N)
     Label(second_frame, text="Order by").grid(row=1, column=0)
-    Button(second_frame, text="Oldest",
-           command=view_student_requests_default, width=25).grid(row=1, column=1)
-    Button(second_frame, text="x", command=view_student_requests_sorted,
-           width=15).grid(row=1, column=2)
+    Button(second_frame, text="Oldest",command=view_student_requests_default, width=25).grid(row=1, column=1)
+    Button(second_frame, text="x", command=view_student_requests_sorted, width=15).grid(row=1, column=2)
     row = 2
     column = 1
     username_dict = {}
@@ -361,17 +482,12 @@ def update_view_student_requests_popup_sorted():
         username = request[1]
         message = request[2]
         time = request[3]
-        Label(second_frame, text=f"{time}").grid(
-            row=row, column=column, sticky=N)
-        Label(second_frame, text=f"{username}").grid(
-            row=row, column=column+1, sticky=N)
-        Label(second_frame, text=f"{message}").grid(
-            row=row, column=column+2, sticky=N)
-        accept_button = Button(second_frame, text="Accept", command=lambda row2=row: accept_student_request_from_sorted(
-            username_dict[row2]), width=10, bd=3)
+        Label(second_frame, text=f"{time}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{message}").grid(row=row, column=column+2, sticky=N)
+        accept_button = Button(second_frame, text="Accept", command=lambda row2=row: accept_student_request_from_sorted(username_dict[row2]), width=10, bd=3)
         accept_button.grid(row=row, column=column+3, sticky=N, padx=(0, 5))
-        reject_button = Button(second_frame, text="Reject", command=lambda row2=row: reject_student_request_from_sorted(
-            username_dict[row2]), width=10)
+        reject_button = Button(second_frame, text="Reject", command=lambda row2=row: reject_student_request_from_sorted(username_dict[row2]), width=10)
         reject_button.grid(row=row, column=column+4, sticky=N, padx=(5, 0))
         row = row + 1
 
@@ -385,16 +501,16 @@ def control_roles_as_admin():
     Label(popup, text="Username").place(x=0, y=40)
     username_entry = Entry(popup, width=18)
     username_entry.place(x=70, y=40)
-    role = StringVar()
-    role.set("student")
+    role = IntVar()
+    role.set(2)
     Radiobutton(popup, text="Student", variable=role,
-                value="student").place(x=80, y=60)
+                value=2).place(x=80, y=60)
     Radiobutton(popup, text="Teacher", variable=role,
-                value="teacher").place(x=80, y=80)
+                value=1).place(x=80, y=80)
     Radiobutton(popup, text="Admin", variable=role,
-                value="admin").place(x=80, y=100)
+                value=0).place(x=80, y=100)
     Radiobutton(popup, text="None", variable=role,
-                value="none").place(x=80, y=120)
+                value=3).place(x=80, y=120)
     Button(popup, text="Confirm", command=lambda: control_roles_as_admin_check(
         username_entry.get(), role.get())).place(x=80, y=150)
 
@@ -405,16 +521,16 @@ def control_roles_as_admin_check(username_input, role_input):
     Label(popup, text="Username").place(x=0, y=40)
     username_entry = Entry(popup, width=18)
     username_entry.place(x=70, y=40)
-    role = StringVar()
-    role.set("student")
+    role = IntVar()
+    role.set(2)
     Radiobutton(popup, text="Student", variable=role,
-                value="student").place(x=80, y=60)
+                value=2).place(x=80, y=60)
     Radiobutton(popup, text="Teacher", variable=role,
-                value="teacher").place(x=80, y=80)
+                value=1).place(x=80, y=80)
     Radiobutton(popup, text="Admin", variable=role,
-                value="admin").place(x=80, y=100)
+                value=0).place(x=80, y=100)
     Radiobutton(popup, text="None", variable=role,
-                value="none").place(x=80, y=120)
+                value=3).place(x=80, y=120)
     Button(popup, text="Confirm", command=lambda: control_roles_as_admin_check(
         username_entry.get(), role.get())).place(x=80, y=150)
     username_not_found = functions.new_username(username_input)
@@ -422,8 +538,16 @@ def control_roles_as_admin_check(username_input, role_input):
         Label(popup, text="Username was not found",
               font=(FONT, 8, "bold")).place(x=20, y=180)
     else:
+        if role_input == 0:
+            role_str = "admin"
+        elif role_input == 1:
+            role_str = "teacher"
+        elif role_input == 2:
+            role_str = "student"
+        elif role_input == 3:
+            role_str = "none"
         database.set_user_role(username_input, role_input)
-        Label(popup, text=f'Set "{username_input}" as {role_input}\nyou can now close the window', font=(
+        Label(popup, text=f'Set "{username_input}" as {role_str}\nyou can now close the window', font=(
             FONT, 8, "bold")).place(x=0, y=180)
 
 
@@ -588,5 +712,3 @@ def open_course_tag_check(tag):
     else:
         Label(popup, text="Could not find course\nmatching with that tag",
               font=(FONT, 8, "bold")).place(x=20, y=120)
-
-
