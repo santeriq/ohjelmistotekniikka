@@ -15,15 +15,17 @@ Käyttäjätyypit:
   -  pystyy selaamaan käyttäjiä (tehty)
 
 * teacher
-  -  pystyy selaamaan ja hyväksymään "student" rooli pyyntöjä
-  -  pystyy liittymään kursseille
-  -  pystyy poistua kurssilta
-  -  pystyy lisäämään opiskelijalle kurssisuorituksen
-  -  pystyy poistamaan opiskelijan kurssilta
+  -  pystyy selaamaan ja hyväksymään "student" rooli pyyntöjä (tehty)
+  -  pystyy liittymään kursseille (tehty)
+  -  pystyy poistua kurssilta (tehty)
+  -  pystyy selaamaan kursseja (tehty)
+  -  pystyy lisäämään opiskelijalle kurssisuorituksen (tehty)
+  -  pystyy poistamaan opiskelijan kurssilta (tehty)
 
 * student
-  -  pystyy liittymään kursseille
-  -  pystyy poistua kurssilta
+  -  pystyy liittymään kursseille (tehty)
+  -  pystyy poistua kurssilta (tehty)
+  -  pystyy selaamaan kursseja (tehty)
   -  pystyy näkemään omat kurssit suoritukset
 
 * user (guest)

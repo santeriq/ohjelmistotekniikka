@@ -27,3 +27,26 @@ role admin:
  - lisätty "view students"
  - lisätty "view teachers"
  - poistettu "delete users"
+
+
+---------------------
+
+29.4.2023 lauantai:
+
+Database muutos
+ - uusi taulukko
+
+role teacher:
+ - lisätty "join course"
+ - lisätty "leave course"
+ - lisätty "view my courses"
+ - lisätty "view all courses"
+ - lisätty "give grade"
+ - lisätty "remove student"
+ - lisätty "view student role requests"
+
+role student:
+ - lisätty "join course"
+ - lisätty "leave course"
+ - lisätty "view my courses"
+ - lisätty "view all courses"

@@ -34,3 +34,16 @@ def new_studentrole_request(username: str):
     if len(check) == 0:
         return True
     return False
+
+def check_is_user_in_course(username: str, course_tag: str):
+    check = database.search_user_in_course(username, course_tag)
+    if len(check) == 0:
+        return False
+    return True
+
+def check_is_course_open(course_tag: str):
+    course = database.get_course_info(course_tag)
+    status = course[4]
+    if status == 1:
+        return True
+    return False

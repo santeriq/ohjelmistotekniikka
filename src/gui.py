@@ -1,6 +1,6 @@
 from tkinter import Tk, Frame, Label, Button, Entry, Canvas, Toplevel, Radiobutton, StringVar, IntVar
 from tkinter import N, Y, RIGHT, VERTICAL, BOTH, LEFT
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from datetime import datetime
 import database
 import functions
@@ -161,12 +161,29 @@ def logged_in_as_student(username):
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
     Label(frame, text=f"{username} (student)", font=(FONT, 9, "bold")).place(x=238, y=0)
+    Button(frame, text="Join course", command=lambda: join_course(username.lower()), width=14, bd=3, pady=3).place(x=100, y=100)
+    Button(frame, text="Leave course", command=lambda: leave_course(username.lower()), width=14, pady=3).place(x=100, y=131)
+    Button(frame, text="View my courses", command=lambda: view_my_courses(username.lower()), width=14).place(x=100, y=160)
+    Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=189)
 
 def logged_in_as_teacher(username):
+    username.lower()
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
-    Label(frame, text=f"{username} (teacher)",
-          font=(FONT, 9, "bold")).place(x=238, y=0)
+    Label(frame, text=f"{username} (teacher)", font=(FONT, 9, "bold")).place(x=238, y=0)
+    Button(frame, text="Join course", command=lambda: join_course(username), width=14, bd=3, pady=3).place(x=100, y=100)
+    Button(frame, text="Leave course", command=lambda: leave_course(username), width=14, pady=3).place(x=100, y=131)
+    Button(frame, text="View my courses", command=lambda: view_my_courses(username), width=14).place(x=100, y=160)
+    Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=350)
+    Label(frame, text="Course tag").place(x=300, y=80)
+
+    tag_entry = Entry(frame, width=18)
+    tag_entry.place(x=300, y=100)
+
+    Button(frame, text="Give grade", command=lambda: create_give_course_grade_popup(username, tag_entry.get().lower()), width=14, bd=3, pady=3).place(x=300, y=120)
+    Button(frame, text="Remove student", command=lambda: create_remove_from_course_popup(username, tag_entry.get().lower()), width=14, pady=3).place(x=300, y=151)
+    Button(frame, text="View student role requests", command=create_view_student_requests_popup, width=25, bd=3, pady=3).place(x=250, y=350)
+
 
 def logged_in_as_admin(username):
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
@@ -202,10 +219,167 @@ def request_student_role(username, message):
         Label(frame, text="Your message is too long", font=(FONT, 8, "bold")).place(x=175, y=140)
 
 
-# student tools
+# student and teacher functionality
 
 
-# teacher tools
+def join_course(username):
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("210x190")
+    popup.title("Join course")
+    Label(popup, text="Join course", font=15).pack()
+    Label(popup, text="Course tag").place(x=0, y=40)
+    tag_entry = Entry(popup, width=18)
+    tag_entry.place(x=70, y=40)
+    Button(popup, text="Join", width=20, command=lambda: join_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+def join_course_tag_check(tag, username):
+    clear_popup()
+    Label(popup, text="Join course", font=15).pack()
+    Label(popup, text="Course tag").place(x=0, y=40)
+    tag_entry = Entry(popup, width=18)
+    tag_entry.place(x=70, y=40)
+    Button(popup, text="Join", width=20, command=lambda: join_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+    tag = tag.lower()
+    if functions.new_coursetag(tag) is True:
+        Label(popup, text="Could not find course\nmatching with that tag", font=(FONT, 8, "bold")).place(x=20, y=120)
+    elif functions.check_is_user_in_course(username, tag) is True:
+        Label(popup, text="Already in this course", font=(FONT, 8, "bold")).place(x=5, y=120)
+    elif functions.check_is_course_open(tag) is False:
+        Label(popup, text="This course is closed", font=(FONT, 8, "bold")).place(x=5, y=120)
+    else:
+        database.join_course(tag, username)
+        Label(popup, text="Joined the course succesfully,\nyou can now close the window", font=(FONT, 8, "bold")).place(x=0, y=120)
+
+def leave_course(username):
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("210x190")
+    popup.title("Leave course")
+    Label(popup, text="Leave course", font=15).pack()
+    Label(popup, text="Course tag").place(x=0, y=40)
+    tag_entry = Entry(popup, width=18)
+    tag_entry.place(x=70, y=40)
+    Button(popup, text="Leave", width=20, command=lambda: leave_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+def leave_course_tag_check(tag, username):
+    clear_popup()
+    Label(popup, text="Leave course", font=15).pack()
+    Label(popup, text="Course tag").place(x=0, y=40)
+    tag_entry = Entry(popup, width=18)
+    tag_entry.place(x=70, y=40)
+    Button(popup, text="Leave", width=20, command=lambda: leave_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+    tag = tag.lower()
+    if functions.new_coursetag(tag) is False:
+        database.leave_course(tag, username)
+        Label(popup, text="Left the course succesfully,\nyou can now close the window", font=(FONT, 8, "bold")).place(x=0, y=120)
+    else:
+        Label(popup, text="Could not find course\nmatching with that tag", font=(FONT, 8, "bold")).place(x=20, y=120)
+
+
+def view_my_courses(username):
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("500x400")
+    popup.title("View courses")
+    add_scrollbar_to_right()
+    Label(second_frame, text="Course name").grid(row=0, column=1)
+    Label(second_frame, text="credits").grid(row=0, column=2)
+    Label(second_frame, text="tag").grid(row=0, column=3)
+    Label(second_frame, text="Order by").grid(row=1, column=0)
+    Button(second_frame, text="Default", width=25).grid(row=1, column=1)
+    Button(second_frame, text="(disabled)", width=15).grid(row=1, column=2)
+    Button(second_frame, text="(disabled)", width=15).grid(row=1, column=3)
+    row = 2
+    column = 1
+    courses_list = database.get_users_courses(username)
+    for course in courses_list:
+        tag = course[1]
+        name = course[2]
+        credits = course[3]
+        Label(second_frame, text=f"{name}       ").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{credits}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"       {tag}       ").grid(row=row, column=column+2, sticky=N)
+        row = row + 1
+
+
+def create_give_course_grade_popup(username, tag):
+    if functions.check_is_user_in_course(username, tag) is True:
+        global popup
+        popup = Toplevel(root)
+        popup.geometry("550x400")
+        popup.title("Give grade")
+        update_give_course_grade_popup(tag)
+    else:
+        messagebox.showerror("Error", "You must be in the course")
+
+def give_course_grade(tag, username, grade):
+    if grade == "" or int(grade) < 0 or 5 < int(grade):
+        grade = 0
+    database.update_grade(tag, username, grade)
+    update_give_course_grade_popup(tag)
+
+def update_give_course_grade_popup(tag):
+    clear_popup()
+    add_scrollbar_to_right()
+    students_list = database.get_students_in_course(tag)
+    Label(second_frame, text="Username").grid(row=0, column=1)
+    Label(second_frame, text="Grade").grid(row=0, column=2)
+    Label(second_frame, text="Order by").grid(row=2, column=0)
+    Button(second_frame, text="Default", width=25).grid(row=2, column=1)
+    Button(second_frame, text="(disabled)", width=15).grid(row=2, column=2)
+    username_entry = Entry(second_frame)
+    username_entry.grid(row=1, column=1)
+    grade_entry = Entry(second_frame)
+    grade_entry.grid(row=1, column=2)
+    Button(second_frame, text="Confirm", command=lambda: give_course_grade(tag, username_entry.get(), grade_entry.get()), width=10, bd=3).grid(row=1, column=3, sticky=N, padx=(10))
+    row = 3
+    for student in students_list:
+        username = student[0]
+        grade = student[1]
+        if grade == 0:
+            grade = ""
+        Label(second_frame, text=f"{username}").grid(row=row, column=1, sticky=N)
+        Label(second_frame, text=f"{grade}").grid(row=row, column=2, sticky=N)
+        row = row + 1
+
+def create_remove_from_course_popup(username, tag):
+    if functions.check_is_user_in_course(username, tag) is True:
+        global popup
+        popup = Toplevel(root)
+        popup.geometry("550x400")
+        popup.title("Remove student")
+        update_remove_from_course_popup(tag)
+    else:
+        messagebox.showerror("Error", "You must be in the course")
+
+def remove_from_course(tag, username):
+    database.remove_from_course(tag, username)
+    update_remove_from_course_popup(tag)
+
+def update_remove_from_course_popup(tag):
+    clear_popup()
+    add_scrollbar_to_right()
+    students_list = database.get_students_in_course(tag)
+    Label(second_frame, text="Username").grid(row=0, column=1)
+    Label(second_frame, text="Grade").grid(row=0, column=2)
+    Label(second_frame, text="Order by").grid(row=2, column=0)
+    Button(second_frame, text="Default", width=25).grid(row=2, column=1)
+    Button(second_frame, text="(disabled)", width=15).grid(row=2, column=2)
+    username_entry = Entry(second_frame)
+    username_entry.grid(row=1, column=1)
+    Button(second_frame, text="Confirm", command=lambda: remove_from_course(tag, username_entry.get()), width=10, bd=3).grid(row=1, column=3, sticky=N, padx=(10))
+    row = 3
+    for student in students_list:
+        username = student[0]
+        grade = student[1]
+        if grade == 0:
+            grade = ""
+        Label(second_frame, text=f"{username}").grid(row=row, column=1, sticky=N)
+        Label(second_frame, text=f"{grade}").grid(row=row, column=2, sticky=N)
+        row = row + 1
 
 
 # admin tools
