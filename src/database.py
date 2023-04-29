@@ -570,3 +570,26 @@ def remove_from_course(course_tag: str, username: str):
     func_db.commit()
     func_db.close()
     return f"Removed {username} from {course_tag}"
+
+def get_student_credits(username: str):
+    func_db = sqlite3.connect("school.db")
+    func_db.isolation_level = None
+    data = func_db.execute("SELECT SUM(course_credits) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
+    func_db.close()
+    return data[0]
+
+def get_student_gpa(username: str):
+    func_db = sqlite3.connect("school.db")
+    func_db.isolation_level = None
+    sum = func_db.execute("SELECT SUM(grade) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
+    courses = func_db.execute("SELECT COUNT(*) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
+    gpa = sum[0]/courses[0]
+    func_db.close()
+    return gpa
+
+def get_student_credits_list(username: str):
+    func_db = sqlite3.connect("school.db")
+    func_db.isolation_level = None
+    data = func_db.execute("SELECT * FROM InCourse WHERE username=? AND grade>0 ORDER BY grade DESC", [username]).fetchall()
+    func_db.close()
+    return data

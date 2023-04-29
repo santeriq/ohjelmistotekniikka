@@ -158,13 +158,21 @@ def logged_in_as_none(username):
     Button(frame, text="Request\nstudent role", command=lambda: request_student_role(username, message_box.get()), bd=3, width=20).place(x=390, y=130)
 
 def logged_in_as_student(username):
+    username.lower()
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
     Label(frame, text=f"{username} (student)", font=(FONT, 9, "bold")).place(x=238, y=0)
     Button(frame, text="Join course", command=lambda: join_course(username.lower()), width=14, bd=3, pady=3).place(x=100, y=100)
     Button(frame, text="Leave course", command=lambda: leave_course(username.lower()), width=14, pady=3).place(x=100, y=131)
     Button(frame, text="View my courses", command=lambda: view_my_courses(username.lower()), width=14).place(x=100, y=160)
-    Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=189)
+    Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=350)
+    gpa = database.get_student_gpa(username)
+    credits = database.get_student_credits(username)
+    Label(frame, text="GPA:", font=10).place(x=380, y=100)
+    Label(frame, text=f"{gpa:.2f}", font=20).place(x=470, y=100)
+    Label(frame, text=f"Credits:", font=10).place(x=380, y=130)
+    Label(frame, text=f"{credits}", font=20).place(x=480, y=130)
+    Button(frame, text="View my credits", command=lambda: create_view_user_credits_popup(username), width=20, bd=3, pady=3).place(x=380, y=160)
 
 def logged_in_as_teacher(username):
     username.lower()
@@ -221,6 +229,38 @@ def request_student_role(username, message):
 
 # student and teacher functionality
 
+def create_view_user_credits_popup(username):
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("650x400")
+    popup.title("View my credits")
+    update_view_user_credits(username)
+
+def update_view_user_credits(username):
+    clear_popup()
+    add_scrollbar_to_right()
+    Label(second_frame, text="Course name").grid(row=0, column=1)
+    Label(second_frame, text="credits").grid(row=0, column=2)
+    Label(second_frame, text="tag").grid(row=0, column=3)
+    Label(second_frame, text="grade").grid(row=0, column=4)
+    Label(second_frame, text="Order by").grid(row=1, column=0)
+    Button(second_frame, text="(disabled)", width=25).grid(row=1, column=1)
+    Button(second_frame, text="(disbaled)", width=15).grid(row=1, column=2)
+    Button(second_frame, text="(disabled)", width=15).grid(row=1, column=3)
+    Button(second_frame, text="Default", width=15).grid(row=1, column=4)
+    row = 2
+    column = 1
+    credits_list = database.get_student_credits_list(username)
+    for credit in credits_list:
+        course_tag = credit[1]
+        course_name = credit[2]
+        course_credits = credit[3]
+        course_grade = credit[7]
+        Label(second_frame, text=f"{course_name}").grid(row=row, column=column, sticky=N)
+        Label(second_frame, text=f"{course_credits}").grid(row=row, column=column+1, sticky=N)
+        Label(second_frame, text=f"{course_tag}").grid(row=row, column=column+2, sticky=N)
+        Label(second_frame, text=f"{course_grade}").grid(row=row, column=column+3, sticky=N)
+        row = row + 1
 
 def join_course(username):
     global popup

@@ -26,7 +26,7 @@ Käyttäjätyypit:
   -  pystyy liittymään kursseille (tehty)
   -  pystyy poistua kurssilta (tehty)
   -  pystyy selaamaan kursseja (tehty)
-  -  pystyy näkemään omat kurssit suoritukset
+  -  pystyy näkemään omat kurssisuoritukset (tehty)
 
 * user (guest)
   -  pystyy lähettämään "student" rooli pyynnön (tehty)
@@ -37,5 +37,4 @@ Jatkokehitysideaoita
  - sorttauksesesta kattavampi
  - mahdollisesti jonkinlainen kurssien, suoritusten tai opettajien kategorisointi
  - admin pystyy poistamaan käyttäjiä
-
 

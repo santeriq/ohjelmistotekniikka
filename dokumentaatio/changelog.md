@@ -50,3 +50,4 @@ role student:
  - lisätty "leave course"
  - lisätty "view my courses"
  - lisätty "view all courses"
+ - lisätty "view my credits"

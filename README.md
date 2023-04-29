@@ -26,4 +26,4 @@ valmiit käyttäjätunnukset sovelluksen toiminnallisuuden testaamiseen
 - abc
 - zzz
 
-**password = salasana1**
+**password = password1**
