@@ -5,7 +5,8 @@ import database
 # !! ABOUT COMMENTS !!
 
 # this module has little to no comments
-# this is because basically all of the functions are simple
+# this is because basically all of the
+# are simple
 
 
 def login(username: str, password: str):
@@ -49,6 +50,8 @@ def check_is_user_in_course(username: str, course_tag: str):
 
 def check_is_course_open(course_tag: str):
     course = database.get_course_info(course_tag)
+    if course is None:
+        return False
     status = course[4]
     if status == 1:
         return True

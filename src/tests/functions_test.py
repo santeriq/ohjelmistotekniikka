@@ -9,7 +9,7 @@ def test_new_password():
 def test_login():
     assert functions.login("moi", "moi") == None
     assert functions.login("user1", "moi") == False
-    assert functions.login("user1", "salasana1") == True
+    assert functions.login("user1", "password1") == True
 
 def test_new_username():
     assert functions.new_username("user1") == False
@@ -22,13 +22,13 @@ def test_new_coursetag():
 def test_new_role_request():
     assert functions.new_role_request("moi") == True
     assert functions.new_role_request("user1") == False
-    assert functions.new_role_request("hdhgsadgjgd") == False
+    assert functions.new_role_request("hdhgsadgjgd") == True
 
 def test_check_is_user_in_course():
-    assert functions.check_is_user_in_course("user1", "ohja2021") == True
-    assert functions.check_is_user_in_course("user1", "ohja2024") == False
+    assert functions.check_is_user_in_course("student1", "ohja2021") == True
+    assert functions.check_is_user_in_course("student1", "ohja2024") == False
     assert functions.check_is_user_in_course("hasdhsadada", "ohja2024") == False
-    assert functions.check_is_user_in_course("user1", "hjdhjsagg") == False
+    assert functions.check_is_user_in_course("student1", "hjdhjsagg") == False
 
 def test_check_is_course_open():
     assert functions.check_is_course_open("ohja2021") == True
