@@ -101,7 +101,7 @@ def create_user(username: str, password: str):
                 [username, pw_hash, 3, 1])
     db.commit()
     db.close()
-    return f"created new user: {username}"
+    return f"Created new user: {username}"
 
 
 def create_admin(username: str, password: str):
@@ -117,7 +117,7 @@ def create_admin(username: str, password: str):
                 [username, pw_hash, 0, 1])
     db.commit()
     db.close()
-    return f"created new admin: {username}"
+    return f"Created new admin: {username}"
 
 
 def create_teacher(username: str, password: str):
@@ -133,7 +133,7 @@ def create_teacher(username: str, password: str):
                 [username, pw_hash, 1, 1])
     db.commit()
     db.close()
-    return f"created new teacher: {username}"
+    return f"Created new teacher: {username}"
 
 
 def create_student(username: str, password: str):
@@ -149,7 +149,7 @@ def create_student(username: str, password: str):
                 [username, pw_hash, 2, 1])
     db.commit()
     db.close()
-    return f"created new student: {username}"
+    return f"Created new student: {username}"
 
 
 def create_course(tag: str, name: str, credits: int):
@@ -164,7 +164,7 @@ def create_course(tag: str, name: str, credits: int):
                 [tag, name, credits, 1, 1])
     db.commit()
     db.close()
-    return f"created new course: {name} / {credits} / {tag}"
+    return f"Created new course: {name} / {credits} / {tag}"
 
 
 def close_course(tag: str):
@@ -173,7 +173,7 @@ def close_course(tag: str):
     db.execute("UPDATE courses SET open=0 WHERE tag=?", [tag])
     db.commit()
     db.close()
-    return f"Closed course {tag}"
+    return f"Closed course: {tag}"
 
 
 def open_course(tag: str):
@@ -182,7 +182,7 @@ def open_course(tag: str):
     db.execute("UPDATE courses SET open=1 WHERE tag=?", [tag])
     db.commit()
     db.close()
-    return f"Opened course {tag}"
+    return f"Opened course: {tag}"
 
 
 def join_course(tag: str, username: str):
@@ -204,7 +204,7 @@ def join_course(tag: str, username: str):
                 [id, tag, name, credits, user_id, username, user_role, 0])
     db.commit()
     db.close()
-    return f"User {username} joined course {tag}"
+    return f"{username} joined course {tag}"
 
 
 def leave_course(tag: str, username: str):
@@ -218,7 +218,7 @@ def leave_course(tag: str, username: str):
                 [tag, username])
     db.commit()
     db.close()
-    return f'User "{username}" left course {tag}'
+    return f"{username} left course {tag}"
 
 
 def delete_teacher(username: str):
@@ -346,7 +346,7 @@ def set_user_role(username: str, role: int):
     db.execute("UPDATE users SET role=? WHERE username=?", [role, username])
     db.commit()
     db.close()
-    return f'set "{username}" as {role}'
+    return f"Set {username} as {role}"
 
 
 def get_courses_list_sorted_by_name():
