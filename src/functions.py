@@ -2,6 +2,12 @@ from werkzeug.security import check_password_hash
 import database
 
 
+# !! ABOUT COMMENTS !!
+
+# this module has little to no comments
+# this is because basically all of the functions are simple
+
+
 def login(username: str, password: str):
     real_password = database.get_password(username)
     if real_password is not None:
@@ -29,8 +35,8 @@ def new_coursetag(tag: str):
         return True
     return False
 
-def new_studentrole_request(username: str):
-    check = database.get_studentrole_request_of_user(username)
+def new_role_request(username: str):
+    check = database.get_role_request_of_user(username)
     if len(check) == 0:
         return True
     return False

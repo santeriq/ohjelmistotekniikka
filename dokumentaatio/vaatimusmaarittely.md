@@ -33,7 +33,7 @@ Käyttäjätyypit:
 
 
 
-Jatkokehitysideaoita
+Jatkokehitysideoita
  - sorttauksesesta kattavampi
  - mahdollisesti jonkinlainen kurssien, suoritusten tai opettajien kategorisointi
  - admin pystyy poistamaan käyttäjiä

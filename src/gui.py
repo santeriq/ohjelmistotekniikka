@@ -5,7 +5,11 @@ from datetime import datetime
 import database
 import functions
 
+
 def start():
+
+    # initializes the program
+
     global root
     root = Tk()
     root.title("vilma")
@@ -23,6 +27,9 @@ def start():
 
 
 # helpful functions
+# helpful functions
+# helpful functions
+
 
 def clear_frame():
     for widgets in frame.winfo_children():
@@ -49,6 +56,8 @@ def add_scrollbar_to_right():
 
 
 # main screen and login / account creation
+# main screen and login / account creation
+# main screen and login / account creation
 
 
 def main_screen():
@@ -71,8 +80,11 @@ def login():
     Button(frame, text="Log in", bd=3, width=15, command=lambda: login_check(username.get(), password.get())).place(x=300, y=120)
     Button(frame, text="Back", command=main_screen, width=10).place(x=450, y=30)
 
-
 def login_check(username, password):
+
+    # this is to update the login screen in case of an error
+    # or redirect to logged in screen in case of success
+
     clear_frame()
     login()
     correct = functions.login(username, password)
@@ -100,15 +112,18 @@ def create_account():
     Button(frame, text="Create account", bd=3, width=15, command=lambda: create_account_check(username.get(), password1.get(), password2.get())).place(x=300, y=140)
     Button(frame, text="Back", command=main_screen, width=10).place(x=450, y=30)
 
-
 def create_account_check(username_input, password1_input, password2_input):
+
+    # this is to update the create account screen in case of an error
+    # or redirect to logged in screen in case of success
+
     clear_frame()
     Label(frame, text="------------------------------------------------------------------").place(x=100, y=40)
     Label(frame, text="username", padx=10, width=17).place(x=100, y=60)
     Label(frame, text="password", padx=10, width=17).place(x=100, y=80)
     Label(frame, text="password again", padx=10, width=17).place(x=100, y=100)
     username = Entry(frame, width=30)
-    username.insert(0, username_input)
+    username.insert(0, username_input)     #     <-- this line
     username.place(x=240, y=60)
     password1 = Entry(frame, width=30, show="*")
     password1.place(x=240, y=80)
@@ -117,6 +132,9 @@ def create_account_check(username_input, password1_input, password2_input):
     Label(frame, text="------------------------------------------------------------------").place(x=100, y=120)
     Button(frame, text="Create account", bd=3, width=15, command=lambda: create_account_check(username.get(), password1.get(), password2.get())).place(x=100, y=140)
     Button(frame, text="Back", command=main_screen, width=10).place(x=450, y=30)
+
+    # this could have been done with create_account()
+    # but this saves the username in the entry box
 
     new_password = functions.new_password(password1_input, password2_input)
     new_username = functions.new_username(username_input)
@@ -132,11 +150,18 @@ def create_account_check(username_input, password1_input, password2_input):
         Label(frame, text="Minimum 8 characters", font=(FONT, 8, "bold")).place(x=440, y=100)
 
 
+
+# screens of different users logged in
+# screens of different users logged in
 # screens of different users logged in
 
 
 def logged_in(username):
+
+    # this checks user's role and redirects to a new screen accordingly
+
     clear_frame()
+    username = username.lower()
     user_role = database.get_user_role(username)
     if user_role == 2:
         logged_in_as_student(username)
@@ -146,6 +171,7 @@ def logged_in(username):
         logged_in_as_admin(username)
     elif user_role == 3:
         logged_in_as_none(username)
+
 
 def logged_in_as_none(username):
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
@@ -157,25 +183,25 @@ def logged_in_as_none(username):
     message_box.place(x=175, y=100)
     Button(frame, text="Request\nstudent role", command=lambda: request_student_role(username, message_box.get()), bd=3, width=20).place(x=390, y=130)
 
+
 def logged_in_as_student(username):
-    username.lower()
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
     Label(frame, text=f"{username} (student)", font=(FONT, 9, "bold")).place(x=238, y=0)
-    Button(frame, text="Join course", command=lambda: join_course(username.lower()), width=14, bd=3, pady=3).place(x=100, y=100)
-    Button(frame, text="Leave course", command=lambda: leave_course(username.lower()), width=14, pady=3).place(x=100, y=131)
-    Button(frame, text="View my courses", command=lambda: view_my_courses(username.lower()), width=14).place(x=100, y=160)
+    Button(frame, text="Join course", command=lambda: join_course(username), width=14, bd=3, pady=3).place(x=100, y=100)
+    Button(frame, text="Leave course", command=lambda: leave_course(username), width=14, pady=3).place(x=100, y=131)
+    Button(frame, text="View my courses", command=lambda: view_my_courses(username), width=14).place(x=100, y=160)
     Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=350)
     gpa = database.get_student_gpa(username)
     credits = database.get_student_credits(username)
     Label(frame, text="GPA:", font=10).place(x=380, y=100)
-    Label(frame, text=f"{gpa:.2f}", font=20).place(x=470, y=100)
+    Label(frame, text=f"{gpa}", font=20).place(x=470, y=100)
     Label(frame, text=f"Credits:", font=10).place(x=380, y=130)
     Label(frame, text=f"{credits}", font=20).place(x=480, y=130)
     Button(frame, text="View my credits", command=lambda: create_view_user_credits_popup(username), width=20, bd=3, pady=3).place(x=380, y=160)
 
+
 def logged_in_as_teacher(username):
-    username.lower()
     Button(frame, text="Log out", command=main_screen, bd=3).place(x=545, y=0)
     Label(frame, text="You are now logged in as").place(x=100, y=0)
     Label(frame, text=f"{username} (teacher)", font=(FONT, 9, "bold")).place(x=238, y=0)
@@ -184,10 +210,8 @@ def logged_in_as_teacher(username):
     Button(frame, text="View my courses", command=lambda: view_my_courses(username), width=14).place(x=100, y=160)
     Button(frame, text="View all courses", command=create_view_courses_popup, width=14, bd=3, pady=3).place(x=100, y=350)
     Label(frame, text="Course tag").place(x=300, y=80)
-
     tag_entry = Entry(frame, width=18)
     tag_entry.place(x=300, y=100)
-
     Button(frame, text="Give grade", command=lambda: create_give_course_grade_popup(username, tag_entry.get().lower()), width=14, bd=3, pady=3).place(x=300, y=120)
     Button(frame, text="Remove student", command=lambda: create_remove_from_course_popup(username, tag_entry.get().lower()), width=14, pady=3).place(x=300, y=151)
     Button(frame, text="View student role requests", command=create_view_student_requests_popup, width=25, bd=3, pady=3).place(x=250, y=350)
@@ -209,25 +233,30 @@ def logged_in_as_admin(username):
 
 
 # role "guest" functionality
+# role "guest" functionality
+# role "guest" functionality
 
 
 def request_student_role(username, message):
     clear_frame()
     logged_in_as_none(username)
-    new_request = functions.new_studentrole_request(username)
+    new_request = functions.new_role_request(username)
     datetime_now = datetime.now()
     datetime_string = datetime_now.strftime("%d/%m/%Y %H:%M:%S")
     if new_request and len(message) <= 30:
-        database.new_studentrole_request(username, message, datetime_string)
+        database.create_role_request(username, message, datetime_string)
         Label(frame, text="Your request has been sent", font=(FONT, 8, "bold")).place(x=175, y=140)
     elif new_request is False and len(message) <= 30:
-        database.update_studentrole_request(username, message, datetime_string)
+        database.update_role_request(username, message, datetime_string)
         Label(frame, text="Your request has been updated", font=(FONT, 8, "bold")).place(x=175, y=140)
     elif len(message) > 30:
         Label(frame, text="Your message is too long", font=(FONT, 8, "bold")).place(x=175, y=140)
 
 
 # student and teacher functionality
+# student and teacher functionality
+# student and teacher functionality
+
 
 def create_view_user_credits_popup(username):
     global popup
@@ -262,6 +291,7 @@ def update_view_user_credits(username):
         Label(second_frame, text=f"{course_grade}").grid(row=row, column=column+3, sticky=N)
         row = row + 1
 
+
 def join_course(username):
     global popup
     popup = Toplevel(root)
@@ -274,12 +304,17 @@ def join_course(username):
     Button(popup, text="Join", width=20, command=lambda: join_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
 
 def join_course_tag_check(tag, username):
+
+    # this updates the popup screen but also has to clear it first and rewrite it
+
     clear_popup()
     Label(popup, text="Join course", font=15).pack()
     Label(popup, text="Course tag").place(x=0, y=40)
     tag_entry = Entry(popup, width=18)
     tag_entry.place(x=70, y=40)
     Button(popup, text="Join", width=20, command=lambda: join_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+    #
 
     tag = tag.lower()
     if functions.new_coursetag(tag) is True:
@@ -291,6 +326,7 @@ def join_course_tag_check(tag, username):
     else:
         database.join_course(tag, username)
         Label(popup, text="Joined the course succesfully,\nyou can now close the window", font=(FONT, 8, "bold")).place(x=0, y=120)
+
 
 def leave_course(username):
     global popup
@@ -304,12 +340,17 @@ def leave_course(username):
     Button(popup, text="Leave", width=20, command=lambda: leave_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
 
 def leave_course_tag_check(tag, username):
+
+    # this updates the popup screen but also has to clear it first and rewrite it
+
     clear_popup()
     Label(popup, text="Leave course", font=15).pack()
     Label(popup, text="Course tag").place(x=0, y=40)
     tag_entry = Entry(popup, width=18)
     tag_entry.place(x=70, y=40)
     Button(popup, text="Leave", width=20, command=lambda: leave_course_tag_check(tag_entry.get(), username)).place(x=25, y=80)
+
+    #
 
     tag = tag.lower()
     if functions.new_coursetag(tag) is False:
@@ -320,6 +361,10 @@ def leave_course_tag_check(tag, username):
 
 
 def view_my_courses(username):
+
+    # this function does not have secondary update functions
+    # in future to make the "Order by" work this will have to be re-written
+
     global popup
     popup = Toplevel(root)
     popup.geometry("500x400")
@@ -345,6 +390,11 @@ def view_my_courses(username):
         row = row + 1
 
 
+# teacher only tools begin
+# teacher only tools begin
+# teacher only tools begin
+
+
 def create_give_course_grade_popup(username, tag):
     if functions.check_is_user_in_course(username, tag) is True:
         global popup
@@ -354,6 +404,7 @@ def create_give_course_grade_popup(username, tag):
         update_give_course_grade_popup(tag)
     else:
         messagebox.showerror("Error", "You must be in the course")
+
 
 def give_course_grade(tag, username, grade):
     if grade == "" or int(grade) < 0 or 5 < int(grade):
@@ -384,6 +435,7 @@ def update_give_course_grade_popup(tag):
         Label(second_frame, text=f"{username}").grid(row=row, column=1, sticky=N)
         Label(second_frame, text=f"{grade}").grid(row=row, column=2, sticky=N)
         row = row + 1
+
 
 def create_remove_from_course_popup(username, tag):
     if functions.check_is_user_in_course(username, tag) is True:
@@ -423,6 +475,9 @@ def update_remove_from_course_popup(tag):
 
 
 # admin tools
+# admin tools
+# admin tools
+
 
 def create_view_all_users_popup():
     global popup
@@ -475,6 +530,7 @@ def update_view_all_users():
         Label(second_frame, text=f"{role}").grid(row=row, column=column+2, sticky=N)
         row = row + 1
 
+
 def create_view_all_students_popup():
     global popup
     popup = Toplevel(root)
@@ -512,6 +568,7 @@ def update_view_all_students():
         Label(second_frame, text=f"{username}").grid(row=row, column=column+1, sticky=N)
         Label(second_frame, text=f"{role}").grid(row=row, column=column+2, sticky=N)
         row = row + 1
+
 
 def create_view_all_teachers_popup():
     global popup
@@ -559,52 +616,44 @@ def create_view_student_requests_popup():
     popup.title("View student role requests")
     view_student_requests()
 
-
 def view_student_requests():
     global requests_list
-    requests_list = database.get_studentrole_requests_list()
+    requests_list = database.get_role_requests_list()
     update_view_student_requests_popup()
-
 
 def view_student_requests_default():
     global requests_list
-    requests_list = database.get_studentrole_requests_list()
+    requests_list = database.get_role_requests_list()
     update_view_student_requests_popup()
-
 
 def accept_student_request_from_default(username):
-    database.accept_studentrole_request(username)
+    database.accept_role_request(username)
     global requests_list
-    requests_list = database.get_studentrole_requests_list()
+    requests_list = database.get_role_requests_list()
     update_view_student_requests_popup()
-
 
 def reject_student_request_from_default(username):
-    database.reject_studentrole_request(username)
+    database.reject_role_request(username)
     global requests_list
-    requests_list = database.get_studentrole_requests_list()
+    requests_list = database.get_role_requests_list()
     update_view_student_requests_popup()
-
 
 def view_student_requests_sorted():
     global requests_list
-    requests_list = database.get_studentrole_requests_list_sorted_by_username()
+    requests_list = database.get_role_requests_list_sorted_by_username()
     update_view_student_requests_popup_sorted()
-
 
 def accept_student_request_from_sorted(username):
-    database.accept_studentrole_request(username)
+    database.accept_role_request(username)
     global requests_list
-    requests_list = database.get_studentrole_requests_list_sorted_by_username()
+    requests_list = database.get_role_requests_list_sorted_by_username()
     update_view_student_requests_popup_sorted()
-
 
 def reject_student_request_from_sorted(username):
-    database.reject_studentrole_request(username)
+    database.reject_role_request(username)
     global requests_list
-    requests_list = database.get_studentrole_requests_list_sorted_by_username()
+    requests_list = database.get_role_requests_list_sorted_by_username()
     update_view_student_requests_popup_sorted()
-
 
 def update_view_student_requests_popup():
     clear_popup()
@@ -635,7 +684,6 @@ def update_view_student_requests_popup():
         reject_button = Button(second_frame, text="Reject", command=lambda row2=row: reject_student_request_from_default(username_dict[row2]), width=10)
         reject_button.grid(row=row, column=column+4, sticky=N, padx=(5, 0))
         row = row + 1
-
 
 def update_view_student_requests_popup_sorted():
     clear_popup()
@@ -685,7 +733,6 @@ def control_roles_as_admin():
     Radiobutton(popup, text="None", variable=role, value=3).place(x=80, y=120)
     Button(popup, text="Confirm", command=lambda: control_roles_as_admin_check(username_entry.get(), role.get())).place(x=80, y=150)
 
-
 def control_roles_as_admin_check(username_input, role_input):
     clear_popup()
     Label(popup, text="Assign role", font=15).pack()
@@ -732,7 +779,6 @@ def create_course():
     tag_entry.place(x=50, y=80)
     Button(popup, text="Confirm", width=20, command=lambda: create_course_check(tag_entry.get(), name_entry.get(), credits_enty.get())).place(x=25, y=120)
 
-
 def create_course_check(tag, name, credits_input):
     clear_popup()
     Label(popup, text="Create new course", font=15).pack()
@@ -768,7 +814,6 @@ def create_view_courses_popup():
     popup.title("View courses")
     update_view_courses_popup(database.get_courses_list_sorted_by_name())
 
-
 def update_view_courses_popup(courses_list):
     clear_popup()
     add_scrollbar_to_right()
@@ -799,18 +844,6 @@ def update_view_courses_popup(courses_list):
         row = row + 1
 
 
-def open_course():
-    global popup
-    popup = Toplevel(root)
-    popup.geometry("210x190")
-    popup.title("Open course")
-    Label(popup, text="Open course", font=15).pack()
-    Label(popup, text="Course tag").place(x=0, y=40)
-    tag_entry = Entry(popup, width=18)
-    tag_entry.place(x=70, y=40)
-    Button(popup, text="Confirm", width=20, command=lambda: open_course_tag_check(tag_entry.get())).place(x=25, y=80)
-
-
 def close_course():
     global popup
     popup = Toplevel(root)
@@ -821,7 +854,6 @@ def close_course():
     tag_entry = Entry(popup, width=18)
     tag_entry.place(x=70, y=40)
     Button(popup, text="Confirm", width=20, command=lambda: close_course_tag_check(tag_entry.get())).place(x=25, y=80)
-
 
 def close_course_tag_check(tag):
     clear_popup()
@@ -838,6 +870,17 @@ def close_course_tag_check(tag):
     else:
         Label(popup, text="Could not find course\nmatching with that tag", font=(FONT, 8, "bold")).place(x=20, y=120)
 
+
+def open_course():
+    global popup
+    popup = Toplevel(root)
+    popup.geometry("210x190")
+    popup.title("Open course")
+    Label(popup, text="Open course", font=15).pack()
+    Label(popup, text="Course tag").place(x=0, y=40)
+    tag_entry = Entry(popup, width=18)
+    tag_entry.place(x=70, y=40)
+    Button(popup, text="Confirm", width=20, command=lambda: open_course_tag_check(tag_entry.get())).place(x=25, y=80)
 
 def open_course_tag_check(tag):
     clear_popup()

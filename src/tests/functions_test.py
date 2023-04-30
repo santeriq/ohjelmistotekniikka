@@ -19,6 +19,20 @@ def test_new_coursetag():
     assert functions.new_coursetag("ohpe2021") == False
     assert functions.new_coursetag("ohpe2020") == True
 
-def test_new_studentrole_request():
-    assert functions.new_studentrole_request("moi") == True
-    assert functions.new_studentrole_request("user1") == False
+def test_new_role_request():
+    assert functions.new_role_request("moi") == True
+    assert functions.new_role_request("user1") == False
+    assert functions.new_role_request("hdhgsadgjgd") == False
+
+def test_check_is_user_in_course():
+    assert functions.check_is_user_in_course("user1", "ohja2021") == True
+    assert functions.check_is_user_in_course("user1", "ohja2024") == False
+    assert functions.check_is_user_in_course("hasdhsadada", "ohja2024") == False
+    assert functions.check_is_user_in_course("user1", "hjdhjsagg") == False
+
+def test_check_is_course_open():
+    assert functions.check_is_course_open("ohja2021") == True
+    assert functions.check_is_course_open("ohpe2021") == False
+    assert functions.check_is_course_open("dsakjdsa") == False
+
+

@@ -3,7 +3,30 @@ import os
 from werkzeug.security import generate_password_hash
 
 
+# !! ABOUT PYLINT !!
+
+# pylint: disable=invalid-name
+# this is because pylint considers "db" as a bad variable name
+# but the variable is only used inside functions
+# and it shortens the lines
+
+# pylint: disable=redefined-builtin
+# this is because "id" and "credits" are considered bad variable names by pylint
+# but these are only used insided functions
+
+
+
+# !! ABOUT COMMENTS !!
+
+# this module has little to no comments
+# this is because basically all of the functions are simple
+
+
+
 # creating database and deleting it
+# creating database and deleting it
+# creating database and deleting it
+
 
 def create_database():
     database = sqlite3.connect("school.db")
@@ -42,15 +65,13 @@ def create_database():
                             user_id INTEGER REFERENCES Users,
                             username TEXT REFERENCS Users,
                             user_role INTEGER REFERENCES Users,
-                            grade INTEGER,
-                            user_visible BOOLEAN
+                            grade INTEGER
                     )""")
         database.commit()
         database.close()
         return "Created database school.db"
     except sqlite3.OperationalError as error:
         return error
-
 
 
 def delete_database():
@@ -61,535 +82,604 @@ def delete_database():
         return error
 
 
+
 # database main functions
+# database main functions
+# database main functions
+
+
 def create_user(username: str, password: str):
-    password_hash = generate_password_hash(password)
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                                INSERT INTO Users
-                                (username, password, role, visible)
-                                VALUES
-                                (?, ?, ?, ?)
-                            """,
-                                [username, password_hash, 3, 1])
-    func_db.commit()
-    func_db.close()
-    return f"created new user: {username}"
-
-
-def create_admin(username: str, password: str):
-    password_hash = generate_password_hash(password)
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                                INSERT INTO Users
-                                (username, password, role, visible)
-                                VALUES
-                                (?, ?, ?, ?)
-                            """,
-                                [username, password_hash, 0, 1])
-    func_db.commit()
-    func_db.close()
-    return f"created new admin: {username}"
-
-
-def create_teacher(username: str, password: str):
-    password_hash = generate_password_hash(password)
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                                INSERT INTO Users
-                                (username, password, role, visible)
-                                VALUES
-                                (?, ?, ?, ?)
-                            """,
-                                [username, password_hash, 1, 1])
-    func_db.commit()
-    func_db.close()
-    return f"created new teacher: {username}"
-
-
-def create_student(username: str, password: str):
-    password_hash = generate_password_hash(password)
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
+    pw_hash = generate_password_hash(password)
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
                 INSERT INTO Users
                 (username, password, role, visible)
                 VALUES
                 (?, ?, ?, ?)
-                """,
-                              [username, password_hash, 2, 1])
-    func_db.commit()
-    func_db.close()
+            """,
+                [username, pw_hash, 3, 1])
+    db.commit()
+    db.close()
+    return f"created new user: {username}"
+
+
+def create_admin(username: str, password: str):
+    pw_hash = generate_password_hash(password)
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                INSERT INTO Users
+                (username, password, role, visible)
+                VALUES
+                (?, ?, ?, ?)
+            """,
+                [username, pw_hash, 0, 1])
+    db.commit()
+    db.close()
+    return f"created new admin: {username}"
+
+
+def create_teacher(username: str, password: str):
+    pw_hash = generate_password_hash(password)
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                INSERT INTO Users
+                (username, password, role, visible)
+                VALUES
+                (?, ?, ?, ?)
+            """,
+                [username, pw_hash, 1, 1])
+    db.commit()
+    db.close()
+    return f"created new teacher: {username}"
+
+
+def create_student(username: str, password: str):
+    pw_hash = generate_password_hash(password)
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                INSERT INTO Users
+                (username, password, role, visible)
+                VALUES
+                (?, ?, ?, ?)
+            """,
+                [username, pw_hash, 2, 1])
+    db.commit()
+    db.close()
     return f"created new student: {username}"
 
 
-def create_course(tag, name, credits_input):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
+def create_course(tag: str, name: str, credits: int):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
                 INSERT INTO Courses
                 (tag, name, credits, open, visible)
                 VALUES
                 (?, ?, ?, ?, ?)
-                """,
-                              [tag, name, credits_input, 1, 1]
-                              )
-    func_db.commit()
-    func_db.close()
-    return f"created new course: {name} / {credits_input} / {tag}"
+            """,
+                [tag, name, credits, 1, 1])
+    db.commit()
+    db.close()
+    return f"created new course: {name} / {credits} / {tag}"
 
 
-def close_course(tag):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("UPDATE courses SET open=0 WHERE tag=?", [tag])
-    func_db.commit()
-    func_db.close()
-    return True
+def close_course(tag: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("UPDATE courses SET open=0 WHERE tag=?", [tag])
+    db.commit()
+    db.close()
+    return f"Closed course {tag}"
 
 
-def open_course(tag):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("UPDATE courses SET open=1 WHERE tag=?", [tag])
-    func_db.commit()
-    func_db.close()
-    return True
+def open_course(tag: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("UPDATE courses SET open=1 WHERE tag=?", [tag])
+    db.commit()
+    db.close()
+    return f"Opened course {tag}"
 
-def join_course(course_tag, username):
-    course_info = get_course_info(course_tag)
-    course_id = course_info[0]
-    course_name = course_info[2]
-    course_credits = course_info[3]
+
+def join_course(tag: str, username: str):
+    info = get_course_info(tag)
+    id = info[0]
+    name = info[2]
+    credits = info[3]
     user_info = get_user_info(username)
     user_id = user_info[0]
     user_role = user_info[3]
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                        INSERT INTO InCourse 
-                        (course_id, course_tag, course_name, course_credits, user_id, username, user_role, grade, user_visible)
-                        VALUES
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """
-                    , [course_id, course_tag, course_name, course_credits, user_id, username, user_role, 0, 1])
-    func_db.commit()
-    func_db.close()
-    return f"User {username} joined course {course_tag}"
-
-def leave_course(course_tag: str, username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                        DELETE FROM InCourse 
-                        WHERE course_tag=?
-                        AND username=?
-                    """
-                    , [course_tag, username])
-    func_db.commit()
-    func_db.close()
-    return f'User "{username}" left course {course_tag}'
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                INSERT INTO InCourse 
+                (course_id, course_tag, course_name, course_credits, user_id, username, user_role, grade)
+                VALUES
+                (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+                [id, tag, name, credits, user_id, username, user_role, 0])
+    db.commit()
+    db.close()
+    return f"User {username} joined course {tag}"
 
 
-def delete_teacher(teacher_username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute(
-        "UPDATE users SET visible=0 WHERE username=?", [teacher_username])
-    func_db.commit()
-    func_db.close()
-    return True
+def leave_course(tag: str, username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                DELETE FROM InCourse 
+                WHERE course_tag=?
+                AND username=?
+            """,
+                [tag, username])
+    db.commit()
+    db.close()
+    return f'User "{username}" left course {tag}'
+
+
+def delete_teacher(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("UPDATE users SET visible=0 WHERE username=?", [username])
+    db.commit()
+    db.close()
+    return f"Deleted teacher: {username}"
+
 
 def get_course_info(tag: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM courses WHERE tag=? AND visible=1", [tag]).fetchone()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("SELECT * FROM courses WHERE tag=? AND visible=1", [tag]).fetchone()
+    db.close()
     return data
+
 
 def get_users_in_course(tag: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM InCourse WHERE course_tag=? AND user_visible=1", [tag]).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("SELECT * FROM InCourse WHERE course_tag=?", [tag]).fetchall()
+    db.close()
     return data
+
 
 def get_students_in_course(tag: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT username, grade FROM InCourse WHERE course_tag=? AND user_role=2 AND user_visible=1 ORDER BY username", [tag]).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT username, grade
+                        FROM InCourse
+                        WHERE course_tag=?
+                        AND user_role=2
+                        ORDER BY username
+                    """,
+                        [tag]).fetchall()
+    db.close()
     return data
 
-def get_users_courses(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM InCourse WHERE username=? AND user_visible=1 ORDER BY course_name", [username]).fetchall()
-    func_db.close()
+
+def get_users_courses(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM InCourse
+                        WHERE username=?
+                        ORDER BY course_name
+                    """,
+                        [username]).fetchall()
+    db.close()
     return data
+
 
 def search_user_in_course(username: str, course_tag: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM InCourse WHERE username=? AND course_tag=? AND user_visible=1", [username, course_tag]).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM InCourse
+                        WHERE username=?
+                        AND course_tag=?
+                    """,
+                        [username, course_tag]).fetchall()
+    db.close()
     return data
+
 
 def get_user_info(username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM users WHERE username=? AND visible=1", [username]).fetchone()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("SELECT * FROM users WHERE username=? AND visible=1", [username]).fetchone()
+    db.close()
     return data
 
-def get_password(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    password = func_db.execute("""
+
+def get_password(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    password = db.execute("""
                             SELECT password
                             FROM users
                             WHERE visible=1
                             AND LOWER(username)=?
-                            """,
-                                         [username.lower()]).fetchone()
-    func_db.commit()
-    func_db.close()
+                        """,
+                            [username.lower()]).fetchone()
+    db.close()
     if password is not None:
         return password[0]
     return None
 
 
-def search_username(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    found = func_db.execute("""
-                       SELECT username
-                       FROM users
-                       WHERE visible=1
-                       AND LOWER(username)=?
-                       """,
-                                      [username.lower()]).fetchall()
-    func_db.commit()
-    func_db.close()
-    return found
+def search_username(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT username
+                        FROM users
+                        WHERE visible=1
+                        AND LOWER(username)=?
+                    """,
+                        [username.lower()]).fetchall()
+    db.close()
+    return data
 
 
-def get_user_role(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    role = func_db.execute("""
-                      SELECT role
-                      FROM users
-                      WHERE LOWER(username)=?
-                      """,
-                                     [username.lower()]).fetchall()
-    func_db.commit()
-    func_db.close()
-    role = role[0][0]
-    return role
+def get_user_role(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT role
+                        FROM users
+                        WHERE LOWER(username)=?
+                    """,
+                        [username.lower()]).fetchone()
+    db.close()
+    return data[0]
 
 
-def set_user_role(username, role):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("UPDATE users SET role=? WHERE username=?", [role, username])
-    func_db.commit()
-    func_db.close()
+def set_user_role(username: str, role: int):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("UPDATE users SET role=? WHERE username=?", [role, username])
+    db.commit()
+    db.close()
     return f'set "{username}" as {role}'
 
 
 def get_courses_list_sorted_by_name():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    courses_list = func_db.execute("""
-                                        SELECT * 
-                                        FROM courses 
-                                        WHERE visible=1 
-                                        ORDER BY name
-                                    """
-                                             ).fetchall()
-    func_db.commit()
-    func_db.close()
-    return courses_list
-
-
-def get_courses_list_sorted_by_credits():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    courses_list = func_db.execute("""
-                                        SELECT *
-                                        FROM courses
-                                        WHERE visible=1
-                                        ORDER BY credits DESC
-                                    """
-                                             ).fetchall()
-    func_db.commit()
-    func_db.close()
-    return courses_list
-
-
-def get_courses_list_sorted_by_tag():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    courses_list = func_db.execute("""
-                                        SELECT *
-                                        FROM courses
-                                        WHERE visible=1
-                                        ORDER BY tag
-                                        """
-                                             ).fetchall()
-    func_db.commit()
-    func_db.close()
-    return courses_list
-
-
-def get_courses_list_sorted_by_status():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    courses_list = func_db.execute("""
-                                        SELECT *
-                                        FROM courses
-                                        WHERE visible=1
-                                        ORDER BY open DESC
-                                        """
-                                             ).fetchall()
-    func_db.commit()
-    func_db.close()
-    return courses_list
-
-
-def search_course_tag(tag):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT tag
-                                        FROM courses
-                                        WHERE visible=1
-                                        AND tag=?
-                                    """,
-                                     [tag]).fetchall()
-    func_db.commit()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT * 
+                        FROM courses 
+                        WHERE visible=1 
+                        ORDER BY name
+                    """
+                        ).fetchall()
+    db.close()
     return data
 
 
-def new_studentrole_request(username, message, datetime):
+def get_courses_list_sorted_by_credits():
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM courses
+                        WHERE visible=1
+                        ORDER BY credits DESC
+                    """
+                        ).fetchall()
+    db.close()
+    return data
+
+
+def get_courses_list_sorted_by_tag():
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM courses
+                        WHERE visible=1
+                        ORDER BY tag
+                    """
+                        ).fetchall()
+    db.close()
+    return data
+
+
+def get_courses_list_sorted_by_status():
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM courses
+                        WHERE visible=1
+                        ORDER BY open DESC
+                    """
+                        ).fetchall()
+    db.close()
+    return data
+
+
+def search_course_tag(tag: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT tag
+                        FROM courses
+                        WHERE visible=1
+                        AND tag=?
+                    """,
+                        [tag]).fetchall()
+    db.close()
+    return data
+
+
+def create_role_request(username: str, message: str, time: str):
     if message == "":
         message = "-"
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
                 INSERT INTO StudentRoleRequests
                 (username, message, datetime)
                 VALUES
                 (?, ?, ?)
-                """,
-                              [username, message, datetime])
-    func_db.commit()
-    func_db.close()
-    return f"New student role request created: {username} / {message} / {datetime}"
+            """,
+                [username, message, time])
+    db.commit()
+    db.close()
+    return f"New student role request created: {username} / {message} / {time}"
 
 
-def update_studentrole_request(username, message, datetime):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("""
-                                UPDATE StudentRoleRequests
-                                SET message=?
-                                WHERE username=?
-                            """,
-                              [message, username])
-    func_db.execute("""
-                                UPDATE StudentRoleRequests
-                                SET datetime=?
-                                WHERE username=?
-                            """,
-                              [datetime, username])
-    func_db.commit()
-    func_db.close()
-    return f"Updated student role request: {username} / {message} / {datetime}"
+def update_role_request(username: str, message: str, time: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                UPDATE StudentRoleRequests
+                SET message=?
+                WHERE username=?
+            """,
+                [message, username])
+    db.execute("""
+                UPDATE StudentRoleRequests
+                SET datetime=?
+                WHERE username=?
+            """,
+                [time, username])
+    db.commit()
+    db.close()
+    return f"Updated student role request: {username} / {message} / {time}"
 
 
-def get_studentrole_requests_list():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    requests = func_db.execute(
-        "SELECT * FROM StudentRoleRequests ORDER BY id").fetchall()
-    func_db.commit()
-    func_db.close()
+def get_role_requests_list():
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    requests = db.execute("SELECT * FROM StudentRoleRequests ORDER BY id").fetchall()
+    db.close()
     return requests
 
 
-def get_studentrole_requests_list_sorted_by_username():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    requests = func_db.execute("""
-                                        SELECT *
-                                        FROM StudentRoleRequests
-                                        ORDER BY username
-                                    """).fetchall()
-    func_db.commit()
-    func_db.close()
-    return requests
+def get_role_requests_list_sorted_by_username():
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM StudentRoleRequests
+                        ORDER BY username
+                    """
+                        ).fetchall()
+    db.close()
+    return data
 
 
-def get_studentrole_request_of_user(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    request = func_db.execute("""
-                         SELECT *
-                         FROM StudentRoleRequests
-                         WHERE username=?
-                         """,
-                                        [username]).fetchall()
-    func_db.commit()
-    func_db.close()
-    return request
+def get_role_request_of_user(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM StudentRoleRequests
+                        WHERE username=?
+                    """,
+                        [username]).fetchall()
+    db.close()
+    return data
+
 
 def get_all_users_list():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE visible=1
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE visible=1
+                    """
+                        ).fetchall()
+    db.close()
     return data
+
 
 def get_all_users_list_sorted_by_name():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE visible=1
-                                        ORDER BY username
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE visible=1
+                        ORDER BY username
+                    """
+                        ).fetchall()
+    db.close()
     return data
+
 
 def get_all_users_list_sorted_by_role():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE visible=1
-                                        ORDER BY role
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE visible=1
+                        ORDER BY role
+                    """
+                        ).fetchall()
+    db.close()
     return data
+
 
 def get_all_students_list():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE role=2
-                                        AND visible=1
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE role=2
+                        AND visible=1
+                    """
+                        ).fetchall()
+    db.close()
     return data
+
 
 def get_all_students_list_sorted_by_name():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE role=2
-                                        AND visible=1
-                                        ORDER BY username
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE role=2
+                        AND visible=1
+                        ORDER BY username
+                    """
+                        ).fetchall()
+    db.close()
     return data
 
+
 def get_all_teachers_list():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE role=1
-                                        AND visible=1
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE role=1
+                        AND visible=1
+                    """
+                        ).fetchall()
+    db.close()
     return data
 
 def get_all_teachers_list_sorted_by_name():
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("""
-                                        SELECT *
-                                        FROM Users
-                                        WHERE role=1
-                                        AND visible=1
-                                        ORDER BY username
-                                    """).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM Users
+                        WHERE role=1
+                        AND visible=1
+                        ORDER BY username
+                    """
+                        ).fetchall()
+    db.close()
     return data
 
-def accept_studentrole_request(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute(
-        "DELETE FROM StudentRoleRequests WHERE username=?", [username])
-    func_db.commit()
-    func_db.close()
+
+def accept_role_request(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("DELETE FROM StudentRoleRequests WHERE username=?", [username])
+    db.commit()
+    db.close()
     set_user_role(username, 2)
     return f"Accepted student role request from {username}"
 
 
-def reject_studentrole_request(username):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute(
-        "DELETE FROM StudentRoleRequests WHERE username=?", [username])
-    func_db.commit()
-    func_db.close()
-    return f"Delete student role request from {username}"
+def reject_role_request(username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("DELETE FROM StudentRoleRequests WHERE username=?", [username])
+    db.commit()
+    db.close()
+    return f"Deleted student role request from {username}"
 
 
-def update_grade(course_tag: str, username: str, grade: int):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("UPDATE InCourse SET grade=? WHERE course_tag=? AND username=?", [grade, course_tag, username])
-    func_db.commit()
-    func_db.close()
-    return f"Updated {username} / {grade} / {course_tag}"
+def update_grade(tag: str, username: str, grade: int):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("""
+                UPDATE InCourse
+                SET grade=?
+                WHERE course_tag=?
+                AND username=?
+            """,
+                [grade, tag, username])
+    db.commit()
+    db.close()
+    return f"Updated {username} / {grade} / {tag}"
 
-def remove_from_course(course_tag: str, username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    func_db.execute("DELETE FROM InCourse WHERE course_tag=? AND username=?", [course_tag, username])
-    func_db.commit()
-    func_db.close()
-    return f"Removed {username} from {course_tag}"
+
+def remove_from_course(tag: str, username: str):
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    db.execute("DELETE FROM InCourse WHERE course_tag=? AND username=?", [tag, username])
+    db.commit()
+    db.close()
+    return f"Removed {username} from {tag}"
+
 
 def get_student_credits(username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT SUM(course_credits) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT SUM(course_credits)
+                        FROM InCourse
+                        WHERE username=?
+                        AND grade>0
+                    """,
+                        [username]).fetchone()
+    db.close()
     return data[0]
 
+
 def get_student_gpa(username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    sum = func_db.execute("SELECT SUM(grade) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
-    courses = func_db.execute("SELECT COUNT(*) FROM InCourse WHERE username=? AND grade>0", [username]).fetchone()
-    gpa = sum[0]/courses[0]
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    grades_sum = db.execute("""
+                            SELECT SUM(grade)
+                            FROM InCourse
+                            WHERE username=?
+                            AND grade>0
+                        """,
+                            [username]).fetchone()
+    courses = db.execute("""
+                            SELECT COUNT(*)
+                            FROM InCourse
+                            WHERE username=?
+                            AND grade>0
+                        """,
+                            [username]).fetchone()
+    db.close()
+    if grades_sum[0] is not None and courses[0] is not None:
+        gpa = grades_sum[0]/courses[0]
+    else:
+        gpa = None
     return gpa
 
+
 def get_student_credits_list(username: str):
-    func_db = sqlite3.connect("school.db")
-    func_db.isolation_level = None
-    data = func_db.execute("SELECT * FROM InCourse WHERE username=? AND grade>0 ORDER BY grade DESC", [username]).fetchall()
-    func_db.close()
+    db = sqlite3.connect("school.db")
+    db.isolation_level = None
+    data = db.execute("""
+                        SELECT *
+                        FROM InCourse
+                        WHERE username=?
+                        AND grade>0
+                        ORDER BY grade DESC
+                    """,
+                        [username]).fetchall()
+    db.close()
     return data
