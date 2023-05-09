@@ -1,6 +1,14 @@
 import database
 
 
+# !! ABOUT DATABASE TEST !!
+
+# There are 2 different school.db files
+# one is for the software to use (root database)
+# other is for testing (src-folder database)
+# these both have the same contents when at first loaded
+# only root database should be affected by the software
+
 def test_create_user():
     assert database.create_user("pytestuser1", "password") == "Created new user: pytestuser1"
     assert database.create_user("pytestuser2", "password") == "Created new user: pytestuser2"

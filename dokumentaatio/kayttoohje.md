@@ -1,4 +1,4 @@
-valmiit käyttäjätunnukset sovelluksen toiminnallisuuden testaamiseen
+Repositoriossa on valmis school.db (root) jotta testikäyttäjät valmiina kun sovelluksen lataa. Erillinen school.db (src-folder) on ainoastaan testejä varten. Tämän sisältö ei muutu.
 
 **usernames:**
 - admin1

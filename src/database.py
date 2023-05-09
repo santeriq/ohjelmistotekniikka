@@ -10,11 +10,6 @@ from werkzeug.security import generate_password_hash
 # but the variable is only used inside functions
 # and it shortens the lines
 
-# pylint: disable=redefined-builtin
-# this is because "id" and "credits" are considered bad variable names by pylint
-# but these are only used insided functions
-
-
 
 # !! ABOUT COMMENTS !!
 
@@ -152,7 +147,7 @@ def create_student(username: str, password: str):
     return f"Created new student: {username}"
 
 
-def create_course(tag: str, name: str, credits: int):
+def create_course(tag: str, name: str, course_credits: int):
     db = sqlite3.connect("school.db")
     db.isolation_level = None
     db.execute("""
@@ -161,10 +156,10 @@ def create_course(tag: str, name: str, credits: int):
                 VALUES
                 (?, ?, ?, ?, ?)
             """,
-                [tag, name, credits, 1, 1])
+                [tag, name, course_credits, 1, 1])
     db.commit()
     db.close()
-    return f"Created new course: {name} / {credits} / {tag}"
+    return f"Created new course: {name} / {course_credits} / {tag}"
 
 
 def close_course(tag: str):
@@ -187,9 +182,9 @@ def open_course(tag: str):
 
 def join_course(tag: str, username: str):
     info = get_course_info(tag)
-    id = info[0]
-    name = info[2]
-    credits = info[3]
+    course_id = info[0]
+    course_name = info[2]
+    course_credits = info[3]
     user_info = get_user_info(username)
     user_id = user_info[0]
     user_role = user_info[3]
@@ -201,7 +196,7 @@ def join_course(tag: str, username: str):
                 VALUES
                 (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-                [id, tag, name, credits, user_id, username, user_role, 0])
+                [course_id, tag, course_name, course_credits, user_id, username, user_role, 0])
     db.commit()
     db.close()
     return f"{username} joined course {tag}"
