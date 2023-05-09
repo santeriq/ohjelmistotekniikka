@@ -1,35 +1,34 @@
 Opintojen seurantasovellus
-
 Mahdollistaa opintopisteiden, kurssisuoritusten, arvosanojen yms. seuraamisen
 
 
 Käyttäjätyypit:
 
 * admin
-  -  pystyy luomaan kursseja (tehty)
-  -  pystyy sulkemaan ja avaamaan kursseja (tehty)
-  -  pystyy selaamaan kursseja (tehty)
-  -  pystyy hallitsemaan käyttäjien rooleja (tehty)
-  -  pystyy selaamaan "student" rooli pyyntöjä (tehty)
-  -  pystyy hyväksymään "student" rooli pyynnön (tehty)
-  -  pystyy selaamaan käyttäjiä (tehty)
+  -  pystyy luomaan kursseja
+  -  pystyy sulkemaan ja avaamaan kursseja
+  -  pystyy selaamaan kursseja
+  -  pystyy hallitsemaan käyttäjien rooleja
+  -  pystyy selaamaan "student" rooli pyyntöjä
+  -  pystyy hyväksymään "student" rooli pyynnön
+  -  pystyy selaamaan käyttäjiä
 
 * teacher
-  -  pystyy selaamaan ja hyväksymään "student" rooli pyyntöjä (tehty)
-  -  pystyy liittymään kursseille (tehty)
-  -  pystyy poistua kurssilta (tehty)
-  -  pystyy selaamaan kursseja (tehty)
-  -  pystyy lisäämään opiskelijalle kurssisuorituksen (tehty)
-  -  pystyy poistamaan opiskelijan kurssilta (tehty)
+  -  pystyy selaamaan ja hyväksymään "student" rooli pyyntöjä
+  -  pystyy liittymään kursseille
+  -  pystyy poistua kurssilta
+  -  pystyy selaamaan kursseja
+  -  pystyy lisäämään opiskelijalle kurssisuorituksen
+  -  pystyy poistamaan opiskelijan kurssilta
 
 * student
-  -  pystyy liittymään kursseille (tehty)
-  -  pystyy poistua kurssilta (tehty)
-  -  pystyy selaamaan kursseja (tehty)
-  -  pystyy näkemään omat kurssisuoritukset (tehty)
+  -  pystyy liittymään kursseille
+  -  pystyy poistua kurssilta
+  -  pystyy selaamaan kursseja
+  -  pystyy näkemään omat kurssisuoritukset
 
 * user (guest)
-  -  pystyy lähettämään "student" rooli pyynnön (tehty)
+  -  pystyy lähettämään "student" rooli pyynnön
 
 
 
